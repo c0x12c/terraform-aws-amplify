@@ -36,8 +36,6 @@ function getStatusInfo(status) {
    * @returns {Promise<{statusCode: number, body: string}>} The response object.
    */
   export const handler = async (event) => {
-    console.log("Function triggered with event:", JSON.stringify(event, null, 2));
-  
     // Retrieve Slack webhook URL from environment variables
     const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
     const ENV = process.env.ENVIRONMENT;
@@ -119,7 +117,6 @@ function getStatusInfo(status) {
         throw new Error(`Slack API error: ${response.status} ${errorText}`);
       }
   
-      console.log("Message sent to Slack successfully.");
       return { statusCode: 200, body: "Notification sent successfully." };
   
     } catch (error) {
