@@ -81,7 +81,7 @@ resource "aws_cloudwatch_event_rule" "amplify_build_rule" {
 
   event_pattern = jsonencode({
     "source"      = ["aws.amplify"],
-    "detail-type" = ["Amplify Job State Change"],
+    "detail-type" = ["Amplify Deployment State Change"],
     "detail" = merge(
       {
         "jobStatus" = ["SUCCEED", "FAILED", "STARTED"]
@@ -99,6 +99,8 @@ resource "aws_cloudwatch_event_target" "this" {
   rule      = aws_cloudwatch_event_rule.amplify_build_rule[0].name
   target_id = "SendToLambdaFunction"
   arn       = aws_lambda_function.amplify_notifier[0].arn
+
+  depends_on = [aws_lambda_function.amplify_notifier]
 }
 
 # Grant EventBridge permission to invoke the Lambda function
@@ -109,4 +111,6 @@ resource "aws_lambda_permission" "this" {
   function_name = aws_lambda_function.amplify_notifier[0].function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.amplify_build_rule[0].arn
+
+  depends_on = [aws_lambda_function.amplify_notifier]
 }
