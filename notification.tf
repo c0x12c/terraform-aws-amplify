@@ -82,7 +82,7 @@ resource "aws_cloudwatch_event_rule" "amplify_build_rule" {
 
   event_pattern = jsonencode({
     "source"      = ["aws.amplify"],
-    "detail-type" = ["Amplify Deployment State Change"],
+    "detail-type" = ["Amplify Deployment Status Change"],
     "detail" = merge(
       {
         "jobStatus" = ["SUCCEED", "FAILED", "STARTED"]
