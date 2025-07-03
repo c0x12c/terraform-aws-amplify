@@ -105,12 +105,12 @@ variable "enable_redirect_to_root" {
 # Notification
 variable "slack_webhook_url" {
   description = "To define webhook url for notifying statuses to Slack"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "enabled_notification" {
   description = "To enable the webhook notification to slack, which will create resources relating lambda function and eventbridge to semd a message"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }

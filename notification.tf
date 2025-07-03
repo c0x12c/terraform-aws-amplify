@@ -1,5 +1,6 @@
 resource "aws_iam_role" "lambda_exec_role" {
-  name = "${var.name}-lambda-exec-role"
+  count = var.enabled_notification ? 1 : 0
+  name  = "${var.name}-lambda-exec-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -17,6 +18,7 @@ resource "aws_iam_role" "lambda_exec_role" {
 
 # IAM policy for logging to CloudWatch
 resource "aws_iam_policy" "lambda_logging_policy" {
+  count       = var.enabled_notification ? 1 : 0
   name        = "${var.name}-lambda-logging-policy"
   description = "IAM policy for Lambda function to write logs to CloudWatch"
 
@@ -38,8 +40,9 @@ resource "aws_iam_policy" "lambda_logging_policy" {
 
 # Attach the logging policy to the Lambda role
 resource "aws_iam_role_policy_attachment" "lambda_logs_attach" {
-  role       = aws_iam_role.lambda_exec_role.name
-  policy_arn = aws_iam_policy.lambda_logging_policy.arn
+  count      = var.enabled_notification ? 1 : 0
+  role       = aws_iam_role.lambda_exec_role[0].name
+  policy_arn = aws_iam_policy.lambda_logging_policy[0].arn
 }
 
 
@@ -52,9 +55,10 @@ data "archive_file" "lambda_zip" {
 
 # Lambda Function Resource
 resource "aws_lambda_function" "amplify_notifier" {
+  count            = var.enabled_notification ? 1 : 0
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = var.name
-  role             = aws_iam_role.lambda_exec_role.arn
+  role             = aws_iam_role.lambda_exec_role[0].arn
   handler          = "index.handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime          = "nodejs20.x"
@@ -71,6 +75,7 @@ resource "aws_lambda_function" "amplify_notifier" {
 
 
 resource "aws_cloudwatch_event_rule" "amplify_build_rule" {
+  count       = var.enabled_notification ? 1 : 0
   name        = "${var.name}-amplify-build"
   description = "Amplify Build"
 
@@ -90,16 +95,18 @@ resource "aws_cloudwatch_event_rule" "amplify_build_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "this" {
-  rule      = aws_cloudwatch_event_rule.amplify_build_rule.name
+  count     = var.enabled_notification ? 1 : 0
+  rule      = aws_cloudwatch_event_rule.amplify_build_rule[0].name
   target_id = "SendToLambdaFunction"
-  arn       = aws_lambda_function.amplify_notifier.arn
+  arn       = aws_lambda_function.amplify_notifier[0].arn
 }
 
 # Grant EventBridge permission to invoke the Lambda function
 resource "aws_lambda_permission" "this" {
+  count         = var.enabled_notification ? 1 : 0
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.amplify_notifier.function_name
+  function_name = aws_lambda_function.amplify_notifier[0].function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.amplify_build_rule.arn
+  source_arn    = aws_cloudwatch_event_rule.amplify_build_rule[0].arn
 }
