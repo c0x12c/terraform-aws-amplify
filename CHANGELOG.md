@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-* Add `enabled_auto_build` to handle flag for enabled auto build or not, in case we don't want production to auto build from master.
+* Add `enable_auto_build` to handle flag for enabled auto build or not, in case we don't want production to auto build from master.
 
 ## [1.0.0]() (2025-07-03)
 
