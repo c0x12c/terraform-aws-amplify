@@ -1,6 +1,12 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [1.0.1]() (2025-07-03)
+
+### Features
+
+* Add `enable_auto_build` to handle flag for enabled auto build or not, in case we don't want production to auto build from master.
+
 ## [1.0.0]() (2025-07-03)
 
 ### Features

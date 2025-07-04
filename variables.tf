@@ -114,3 +114,9 @@ variable "enabled_notification" {
   type        = bool
   default     = false
 }
+
+variable "enable_auto_build" {
+  description = "To enable auto build for deployment branch"
+  type        = bool
+  default     = true
+}

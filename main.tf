@@ -58,7 +58,7 @@ resource "aws_amplify_branch" "this" {
   stage                   = var.environment == "prod" ? "PRODUCTION" : "DEVELOPMENT"
   backend_environment_arn = var.enable_backend ? aws_amplify_backend_environment.this[0].arn : null
 
-  enable_auto_build = true
+  enable_auto_build = var.enable_auto_build
   framework         = var.framework
 }
 
