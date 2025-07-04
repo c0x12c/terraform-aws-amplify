@@ -31,3 +31,9 @@ output "domain_name" {
   description = "Created domain name"
   value       = aws_amplify_domain_association.this.domain_name
 }
+
+output "webhook_url" {
+  description = "To get the webhook url of amplify"
+  value       = try(aws_amplify_webhook.main[0].url, null)
+  sensitive   = true
+}
