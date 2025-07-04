@@ -27,6 +27,7 @@ output "amplify_app_backend_role_arn" {
   description = "Created app backend role arn"
   value       = aws_iam_role.amplify_backend.arn
 }
+
 output "domain_name" {
   description = "Created domain name"
   value       = aws_amplify_domain_association.this.domain_name

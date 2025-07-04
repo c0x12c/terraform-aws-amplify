@@ -87,6 +87,7 @@ No modules.
 | <a name="input_custom_redirect_rules"></a> [custom\_redirect\_rules](#input\_custom\_redirect\_rules) | Custom redirect rules for redirecting requests to Amplify app | <pre>list(object({<br/>    source = string<br/>    status = string<br/>    target = string<br/>  }))</pre> | <pre>[<br/>  {<br/>    "source": "/<*>",<br/>    "status": "404",<br/>    "target": "/index.html"<br/>  }<br/>]</pre> | no |
 | <a name="input_deploy_branch_name"></a> [deploy\_branch\_name](#input\_deploy\_branch\_name) | The branch name to deploy the source code | `string` | n/a | yes |
 | <a name="input_dns_zone"></a> [dns\_zone](#input\_dns\_zone) | DNS zone for creating domain | `string` | n/a | yes |
+| <a name="input_enable_auto_build"></a> [enable\_auto\_build](#input\_enable\_auto\_build) | To enable auto build for deployment branch | `bool` | `true` | no |
 | <a name="input_enable_backend"></a> [enable\_backend](#input\_enable\_backend) | To enable aws\_amplify\_backend\_environment | `bool` | `true` | no |
 | <a name="input_enable_redirect_to_root"></a> [enable\_redirect\_to\_root](#input\_enable\_redirect\_to\_root) | To enable redirect to the root | `bool` | `false` | no |
 | <a name="input_enabled_notification"></a> [enabled\_notification](#input\_enabled\_notification) | To enable the webhook notification to slack, which will create resources relating lambda function and eventbridge to semd a message | `bool` | `false` | no |
@@ -111,4 +112,5 @@ No modules.
 | <a name="output_backend_environment_name"></a> [backend\_environment\_name](#output\_backend\_environment\_name) | Created backend environment name |
 | <a name="output_domain_name"></a> [domain\_name](#output\_domain\_name) | Created domain name |
 | <a name="output_name"></a> [name](#output\_name) | Amplify App name |
+| <a name="output_webhook_url"></a> [webhook\_url](#output\_webhook\_url) | To get the webhook url of amplify |
 <!-- END_TF_DOCS -->
