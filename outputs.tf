@@ -8,6 +8,11 @@ output "arn" {
   value       = aws_amplify_app.this.arn
 }
 
+output "id" {
+  description = "Amplify App ID"
+  value       = aws_amplify_app.this.id
+}
+
 output "backend_environment_name" {
   description = "Created backend environment name"
   value       = var.enable_backend ? aws_amplify_backend_environment.this[0].environment_name : null

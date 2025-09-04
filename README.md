@@ -48,8 +48,8 @@ module "website" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_archive"></a> [archive](#provider\_archive) | 2.7.1 |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.2.0 |
+| <a name="provider_archive"></a> [archive](#provider\_archive) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.75 |
 
 ## Modules
 
@@ -111,6 +111,7 @@ No modules.
 | <a name="output_backend_environment_arn"></a> [backend\_environment\_arn](#output\_backend\_environment\_arn) | Created backend environment arn |
 | <a name="output_backend_environment_name"></a> [backend\_environment\_name](#output\_backend\_environment\_name) | Created backend environment name |
 | <a name="output_domain_name"></a> [domain\_name](#output\_domain\_name) | Created domain name |
+| <a name="output_id"></a> [id](#output\_id) | Amplify App ID |
 | <a name="output_name"></a> [name](#output\_name) | Amplify App name |
 | <a name="output_webhook_url"></a> [webhook\_url](#output\_webhook\_url) | To get the webhook url of amplify |
 <!-- END_TF_DOCS -->
