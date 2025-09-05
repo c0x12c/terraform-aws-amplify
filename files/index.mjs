@@ -35,6 +35,9 @@ function getStatusInfo(status) {
    * @returns {Promise<{statusCode: number, body: string}>} The response object.
    */
   export const handler = async (event) => {
+    // Log the entire event for debugging
+    console.log("Received event:", JSON.stringify(event, null, 2));
+
     // Retrieve Slack webhook URL from environment variables
     const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
     const ENV = process.env.ENVIRONMENT;
@@ -46,6 +49,9 @@ function getStatusInfo(status) {
   
     const { detail, region = "us-east-1" } = event;
     const { appId, branchName, jobStatus, commitId, commitMessage } = detail || {};
+
+    // Log extracted event details for debugging
+    console.log("Extracted details:", { appId, branchName, jobStatus, commitId, commitMessage, region });
 
     // Initialize AWS Amplify client
     const amplifyClient = new AmplifyClient({ region });
