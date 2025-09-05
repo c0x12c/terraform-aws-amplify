@@ -38,11 +38,39 @@ resource "aws_iam_policy" "lambda_logging_policy" {
   })
 }
 
+# IAM policy for Amplify app access
+resource "aws_iam_policy" "lambda_amplify_policy" {
+  count       = var.enabled_notification ? 1 : 0
+  name        = "${var.name}-lambda-amplify-policy"
+  description = "IAM policy for Lambda function to access Amplify app details and domain associations"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "amplify:GetApp",
+          "amplify:ListDomainAssociations"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 # Attach the logging policy to the Lambda role
 resource "aws_iam_role_policy_attachment" "lambda_logs_attach" {
   count      = var.enabled_notification ? 1 : 0
   role       = aws_iam_role.lambda_exec_role[0].name
   policy_arn = aws_iam_policy.lambda_logging_policy[0].arn
+}
+
+# Attach the Amplify policy to the Lambda role
+resource "aws_iam_role_policy_attachment" "lambda_amplify_attach" {
+  count      = var.enabled_notification ? 1 : 0
+  role       = aws_iam_role.lambda_exec_role[0].name
+  policy_arn = aws_iam_policy.lambda_amplify_policy[0].arn
 }
 
 
