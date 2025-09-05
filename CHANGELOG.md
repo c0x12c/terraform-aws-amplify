@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1]() (2025-09-05)
+
+### Features
+
+* Add Slack message threading for deployment notifications.
+
 ## [1.1.0]() (2025-09-05)
 
 ### Features

@@ -103,7 +103,6 @@ resource "aws_lambda_function" "amplify_notifier" {
   depends_on = [aws_iam_role.lambda_exec_role]
 }
 
-
 resource "aws_cloudwatch_event_rule" "amplify_build_rule" {
   count       = var.enabled_notification ? 1 : 0
   name        = "${var.name}-amplify-build"

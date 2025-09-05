@@ -60,6 +60,16 @@ function getStatusInfo(status) {
 }
 
 /**
+ * Generates a consistent thread ID for grouping deployment messages
+ * @param {string} appName - The Amplify app name
+ * @param {string} jobId - The job ID
+ * @returns {string} A consistent thread ID for the deployment
+ */
+function generateThreadId(appName, jobId) {
+  return `${appName}-${jobId}`;
+}
+
+/**
  * The main handler for the Lambda function.
  * @param {object} event - The event payload from AWS EventBridge.
  * @returns {Promise<{statusCode: number, body: string}>} The response object.
@@ -128,9 +138,13 @@ export const handler = async (event) => {
   // Get appropriate status info (emoji and message)
   const { emoji, message } = getStatusInfo(jobStatus);
 
+  // Generate thread ID for grouping messages
+  const threadId = generateThreadId(appName, jobId);
+
   // Create the Slack message payload using Block Kit for rich formatting
   const slackMessage = {
     text: `Amplify Build for ${branchName || 'unknown branch'} ${message}`, // Fallback text for notifications
+    thread_ts: threadId, // Use consistent thread ID
     blocks: [
       {
         type: 'header',
