@@ -28,7 +28,7 @@ function getStatusInfo(status) {
         return { emoji: "ℹ️", message: status || "unknown" };
     }
   }
-  
+
   /**
    * The main handler for the Lambda function.
    * @param {object} event - The event payload from AWS EventBridge.
@@ -46,7 +46,7 @@ function getStatusInfo(status) {
       console.error("Error: SLACK_WEBHOOK_URL environment variable is not set.");
       return { statusCode: 500, body: "SLACK_WEBHOOK_URL is not configured." };
     }
-  
+
     const { detail, region = "us-east-1" } = event;
     const { appId, branchName, jobStatus, commitId, commitMessage } = detail || {};
 
@@ -65,10 +65,14 @@ function getStatusInfo(status) {
       const appResponse = await amplifyClient.send(getAppCommand);
       appName = appResponse.app?.name || appId;
 
+      console.log("appResponse:", JSON.stringify(appResponse, null, 2));
+
       // Get domain associations for the app
       const listDomainsCommand = new ListDomainAssociationsCommand({ appId });
       const domainsResponse = await amplifyClient.send(listDomainsCommand);
-      
+
+      console.log("domainsResponse:", JSON.stringify(domainsResponse, null, 2));
+
       if (domainsResponse.domainAssociations && domainsResponse.domainAssociations.length > 0) {
         // Get the first domain association
         domainName = domainsResponse.domainAssociations[0].domainName;
@@ -77,13 +81,13 @@ function getStatusInfo(status) {
       console.warn("Failed to fetch app details or domains:", error);
       // Continue with appId as fallback
     }
-  
+
     // Construct the URL to view the build in the AWS Amplify Console
     const buildUrl = `https://${region}.console.aws.amazon.com/amplify/apps/${appId}/branches/${branchName}/deployments`;
-  
+
     // Get appropriate status info (emoji and message)
     const { emoji, message } = getStatusInfo(jobStatus);
-  
+
     // Create the Slack message payload using Block Kit for rich formatting
     const slackMessage = {
       text: `Amplify Build for ${branchName || "unknown branch"} ${message}`, // Fallback text for notifications
@@ -132,7 +136,7 @@ function getStatusInfo(status) {
         }
       ],
     };
-  
+
     try {
       // Send the message to Slack using the native fetch API
       const response = await fetch(SLACK_WEBHOOK_URL, {
@@ -140,18 +144,17 @@ function getStatusInfo(status) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(slackMessage),
       });
-  
+
       if (!response.ok) {
         // If the response is not OK, throw an error to be caught by the catch block
         const errorText = await response.text();
         throw new Error(`Slack API error: ${response.status} ${errorText}`);
       }
-  
+
       return { statusCode: 200, body: "Notification sent successfully." };
-  
+
     } catch (error) {
       console.error("Failed to send message to Slack:", error);
       return { statusCode: 500, body: "Failed to send notification." };
     }
   };
-  
