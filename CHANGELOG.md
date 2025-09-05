@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0]() (2025-09-05)
+
+### Features
+
+* Enhanced Slack notification Lambda function to show proper Amplify app name instead of app ID.
+* Removed Job ID and Status fields from Slack notifications for cleaner messaging.
+* Added GitHub commit subject display in notifications.
+* Added associated domain name display for Amplify apps.
+* Updated Lambda function to use AWS SDK v3 for better Amplify API integration.
+
 ## [1.0.2]() (2025-09-04)
 
 ### Features

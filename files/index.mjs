@@ -9,8 +9,7 @@
  * - SLACK_WEBHOOK_URL: The incoming webhook URL for your Slack channel.
  */
 
-// In AWS Lambda Node.js 20.x runtime, fetch is available globally.
-// No external dependency is needed.
+import { AmplifyClient, GetAppCommand, GetDomainAssociationCommand, ListDomainAssociationsCommand } from "@aws-sdk/client-amplify";
 
 /**
  * Returns an emoji and a descriptive message based on the job status.
@@ -46,7 +45,32 @@ function getStatusInfo(status) {
     }
   
     const { detail, region = "us-east-1" } = event;
-    const { appId, branchName, jobId, jobStatus } = detail || {};
+    const { appId, branchName, jobStatus, commitId, commitMessage } = detail || {};
+
+    // Initialize AWS Amplify client
+    const amplifyClient = new AmplifyClient({ region });
+
+    let appName = appId;
+    let domainName = null;
+
+    try {
+      // Get the Amplify app details to fetch the app name
+      const getAppCommand = new GetAppCommand({ appId });
+      const appResponse = await amplifyClient.send(getAppCommand);
+      appName = appResponse.app?.name || appId;
+
+      // Get domain associations for the app
+      const listDomainsCommand = new ListDomainAssociationsCommand({ appId });
+      const domainsResponse = await amplifyClient.send(listDomainsCommand);
+      
+      if (domainsResponse.domainAssociations && domainsResponse.domainAssociations.length > 0) {
+        // Get the first domain association
+        domainName = domainsResponse.domainAssociations[0].domainName;
+      }
+    } catch (error) {
+      console.warn("Failed to fetch app details or domains:", error);
+      // Continue with appId as fallback
+    }
   
     // Construct the URL to view the build in the AWS Amplify Console
     const buildUrl = `https://${region}.console.aws.amazon.com/amplify/apps/${appId}/branches/${branchName}/deployments`;
@@ -69,10 +93,10 @@ function getStatusInfo(status) {
         {
           type: "section",
           fields: [
-            { type: "mrkdwn", text: `*App Name:*\n\`${appId || "unknown"}\`` },
+            { type: "mrkdwn", text: `*App Name:*\n\`${appName || "unknown"}\`` },
             { type: "mrkdwn", text: `*Branch:*\n\`${branchName || "unknown"}\`` },
-            { type: "mrkdwn", text: `*Job ID:*\n\`${jobId || "unknown"}\`` },
-            { type: "mrkdwn", text: `*Status:*\n*${message}*` },
+            ...(commitMessage ? [{ type: "mrkdwn", text: `*Commit:*\n${commitMessage}` }] : []),
+            ...(domainName ? [{ type: "mrkdwn", text: `*Domain:*\n${domainName}` }] : []),
           ],
         },
         {
