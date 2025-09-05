@@ -152,7 +152,7 @@ export const handler = async (event) => {
         ? [
             {
               type: 'context',
-              elements: [{ type: 'mrkdwn', text: `*Commit:* \`${commitMessage}\`` }],
+              elements: [{ type: 'mrkdwn', text: `*Commit:* ${commitMessage}` }],
             },
           ]
         : []),
