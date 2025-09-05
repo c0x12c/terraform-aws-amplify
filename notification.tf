@@ -50,7 +50,8 @@ resource "aws_iam_policy" "lambda_amplify_policy" {
       {
         Action = [
           "amplify:GetApp",
-          "amplify:ListDomainAssociations"
+          "amplify:ListDomainAssociations",
+          "amplify:GetJob"
         ],
         Effect   = "Allow",
         Resource = "*"

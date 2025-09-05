@@ -9,7 +9,7 @@
  * - SLACK_WEBHOOK_URL: The incoming webhook URL for your Slack channel.
  */
 
-import { AmplifyClient, GetAppCommand, GetDomainAssociationCommand, ListDomainAssociationsCommand } from "@aws-sdk/client-amplify";
+import { AmplifyClient, GetAppCommand, ListDomainAssociationsCommand, GetJobCommand } from "@aws-sdk/client-amplify";
 
 /**
  * Returns an emoji and a descriptive message based on the job status.
@@ -48,16 +48,17 @@ function getStatusInfo(status) {
     }
 
     const { detail, region = "us-east-1" } = event;
-    const { appId, branchName, jobStatus, commitId, commitMessage } = detail || {};
+    const { appId, branchName, jobStatus, jobId } = detail || {};
 
     // Log extracted event details for debugging
-    console.log("Extracted details:", { appId, branchName, jobStatus, commitId, commitMessage, region });
+    console.log("Extracted details:", { appId, branchName, jobStatus, jobId, region });
 
     // Initialize AWS Amplify client
     const amplifyClient = new AmplifyClient({ region });
 
     let appName = appId;
     let domainName = null;
+    let commitMessage = null;
 
     try {
       // Get the Amplify app details to fetch the app name
@@ -77,9 +78,20 @@ function getStatusInfo(status) {
         // Get the first domain association
         domainName = domainsResponse.domainAssociations[0].domainName;
       }
+
+      // Get job details to fetch commit information
+      if (jobId) {
+        const getJobCommand = new GetJobCommand({ appId, branchName, jobId });
+        const jobResponse = await amplifyClient.send(getJobCommand);
+        
+        console.log("jobResponse:", JSON.stringify(jobResponse, null, 2));
+        
+        // Extract commit message from job details
+        commitMessage = jobResponse.job?.summary?.commitMessage || jobResponse.job?.commitMessage;
+      }
     } catch (error) {
-      console.warn("Failed to fetch app details or domains:", error);
-      // Continue with appId as fallback
+      console.warn("Failed to fetch app details, domains, or job info:", error);
+      // Continue with available data as fallback
     }
 
     // Construct the URL to view the build in the AWS Amplify Console
