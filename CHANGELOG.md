@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0]() (2025-12-11)
+
+### Features
+
+* Added explicit source for GitHub provider (`integrations/github`) in versions.tf
+
 ## [1.1.1]() (2025-09-05)
 
 ### Features
