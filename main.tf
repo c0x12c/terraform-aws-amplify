@@ -109,7 +109,7 @@ resource "aws_s3_object" "custom_http_config" {
   bucket = aws_amplify_app.this.default_domain
   key    = "customHttp.yml"
   content = templatefile("${path.module}/templates/customHttp.tftpl", {
-    custom_headers = var.custom_headers
+    custom_headers   = var.custom_headers
     application_root = var.application_root
   })
 
