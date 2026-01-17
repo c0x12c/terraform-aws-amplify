@@ -11,7 +11,7 @@ this [guideline](https://docs.aws.amazon.com/amplify/latest/userguide/deploy-nex
 
 ```hcl
 module "website" {
-  source  = "github.com/spartan-stratos/terraform-modules//aws/amplify?ref=v0.1.0"
+  source  = "github.com/c0x12c/terraform-aws-amplify?ref=v0.1.0"
 
   dns_zone         = "example.com"
   environment      = "dev"
@@ -28,13 +28,30 @@ module "website" {
   install_command          = "yarn install"
   build_command            = "yarn build"
   base_artifacts_directory = ".next"
+
+  # Optional: Configure custom HTTP headers
+  custom_headers = [
+    {
+      pattern = "**/*"
+      headers = [
+        {
+          key   = "Strict-Transport-Security"
+          value = "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          key   = "X-Content-Type-Options"
+          value = "nosniff"
+        }
+      ]
+    }
+  ]
 }
 
 ```
 
 ## Examples
 
-- [Example](./examples/nextjs-app/).
+- [Next.js App with Custom Headers Example](./examples/nextjs-app/) - Demonstrates security headers and cache control configuration.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
