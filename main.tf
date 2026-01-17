@@ -110,6 +110,7 @@ resource "aws_s3_object" "custom_http_config" {
   key    = "customHttp.yml"
   content = templatefile("${path.module}/templates/customHttp.tftpl", {
     custom_headers = var.custom_headers
+    application_root = var.application_root
   })
 
   depends_on = [aws_amplify_branch.this]
