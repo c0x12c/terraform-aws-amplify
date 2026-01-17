@@ -120,3 +120,15 @@ variable "enable_auto_build" {
   type        = bool
   default     = true
 }
+
+variable "custom_headers" {
+  description = "Custom HTTP headers for the Amplify app"
+  type = list(object({
+    pattern = string
+    headers = list(object({
+      key   = string
+      value = string
+    }))
+  }))
+  default = []
+}
