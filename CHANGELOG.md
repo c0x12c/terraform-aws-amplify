@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1]() (2026-01-18)
+
+### Bug Fixes
+
+* Replaced local-exec and null_resource approach with native `custom_headers` argument in `aws_amplify_app` resource.
+
 ## [1.3.0]() (2026-01-18)
 
 ### Features
