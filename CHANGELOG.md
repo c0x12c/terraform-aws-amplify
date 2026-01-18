@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2]() (2026-01-18)
+
+### Bug Fixes
+
+* Fixed `custom_headers` always showing changes in Terraform plan by using `jsonencode` instead of YAML format for the `custom_headers_yaml` local.
+
 ## [1.3.1]() (2026-01-18)
 
 ### Bug Fixes

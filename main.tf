@@ -29,7 +29,7 @@ resource "aws_amplify_app" "this" {
   iam_service_role_arn  = aws_iam_role.amplify_backend.arn
   environment_variables = var.build_variables
 
-  custom_headers = local.custom_headers_yaml
+  custom_headers = local.custom_headers_json
 
   lifecycle {
     ignore_changes = [

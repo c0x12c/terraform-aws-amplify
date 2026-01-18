@@ -16,8 +16,8 @@ locals {
     var.custom_redirect_rules
   ) : var.custom_redirect_rules
 
-  custom_headers_yaml = length(var.custom_headers) > 0 ? templatefile("${path.module}/templates/customHttp-${local.is_monorepo ? "monorepo" : "normal"}.tftpl", {
+  custom_headers_json = length(var.custom_headers) > 0 ? jsonencode(templatefile("${path.module}/templates/customHttp-${local.is_monorepo ? "monorepo" : "normal"}.tftpl", {
     custom_headers   = var.custom_headers
     application_root = var.application_root
-  }) : null
+  })) : null
 }
