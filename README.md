@@ -11,7 +11,7 @@ this [guideline](https://docs.aws.amazon.com/amplify/latest/userguide/deploy-nex
 
 ```hcl
 module "website" {
-  source  = "github.com/spartan-stratos/terraform-modules//aws/amplify?ref=v0.1.0"
+  source  = "github.com/c0x12c/terraform-aws-amplify?ref=v0.1.0"
 
   dns_zone         = "example.com"
   environment      = "dev"
@@ -28,13 +28,30 @@ module "website" {
   install_command          = "yarn install"
   build_command            = "yarn build"
   base_artifacts_directory = ".next"
+
+  # Optional: Configure custom HTTP headers
+  custom_headers = [
+    {
+      pattern = "**/*"
+      headers = [
+        {
+          key   = "Strict-Transport-Security"
+          value = "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          key   = "X-Content-Type-Options"
+          value = "nosniff"
+        }
+      ]
+    }
+  ]
 }
 
 ```
 
 ## Examples
 
-- [Example](./examples/nextjs-app/).
+- [Next.js App with Custom Headers Example](./examples/nextjs-app/) - Demonstrates security headers and cache control configuration.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -43,7 +60,7 @@ module "website" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.8 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.75 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | >= 6.5.0, < 6.9.0 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | >= 6.5.0, < 6.9.1 |
 
 ## Providers
 
@@ -51,6 +68,8 @@ module "website" {
 |------|---------|
 | <a name="provider_archive"></a> [archive](#provider\_archive) | n/a |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.75 |
+| <a name="provider_local"></a> [local](#provider\_local) | n/a |
+| <a name="provider_null"></a> [null](#provider\_null) | n/a |
 
 ## Modules
 
@@ -76,8 +95,11 @@ No modules.
 | [aws_iam_role_policy_attachment.lambda_logs_attach](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_lambda_function.amplify_notifier](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
 | [aws_lambda_permission.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
+| [local_file.custom_http_config](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
+| [null_resource.update_custom_headers](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [archive_file.lambda_zip](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |
 | [aws_iam_policy_document.amplify_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
 
@@ -87,6 +109,7 @@ No modules.
 | <a name="input_base_artifacts_directory"></a> [base\_artifacts\_directory](#input\_base\_artifacts\_directory) | Base directory that stores build artifacts | `string` | `".next"` | no |
 | <a name="input_build_command"></a> [build\_command](#input\_build\_command) | The build command to execute JS scripts | `string` | `"yarn build"` | no |
 | <a name="input_build_variables"></a> [build\_variables](#input\_build\_variables) | Map of environment variables for building app | `map(string)` | n/a | yes |
+| <a name="input_custom_headers"></a> [custom\_headers](#input\_custom\_headers) | Custom HTTP headers for the Amplify app | <pre>list(object({<br/>    pattern = string<br/>    headers = list(object({<br/>      key   = string<br/>      value = string<br/>    }))<br/>  }))</pre> | `[]` | no |
 | <a name="input_custom_redirect_rules"></a> [custom\_redirect\_rules](#input\_custom\_redirect\_rules) | Custom redirect rules for redirecting requests to Amplify app | <pre>list(object({<br/>    source = string<br/>    status = string<br/>    target = string<br/>  }))</pre> | <pre>[<br/>  {<br/>    "source": "/<*>",<br/>    "status": "404",<br/>    "target": "/index.html"<br/>  }<br/>]</pre> | no |
 | <a name="input_deploy_branch_name"></a> [deploy\_branch\_name](#input\_deploy\_branch\_name) | The branch name to deploy the source code | `string` | n/a | yes |
 | <a name="input_dns_zone"></a> [dns\_zone](#input\_dns\_zone) | DNS zone for creating domain | `string` | n/a | yes |

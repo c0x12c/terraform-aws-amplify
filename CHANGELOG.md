@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0]() (2026-01-18)
+
+### Features
+
+* Added `custom_headers` variable to support custom HTTP headers for Amplify applications.
+
 ## [1.2.0]() (2025-12-11)
 
 ### Features
