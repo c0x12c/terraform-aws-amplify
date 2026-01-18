@@ -9,11 +9,9 @@ locals {
 locals {
   template_file = local.is_monorepo ? "${path.module}/templates/customHttp-monorepo.tftpl" : "${path.module}/templates/customHttp-normal.tftpl"
 
-  template_vars = local.is_monorepo ? {
+  template_vars = {
     custom_headers   = var.custom_headers
     application_root = var.application_root
-    } : {
-    custom_headers = var.custom_headers
   }
 }
 
