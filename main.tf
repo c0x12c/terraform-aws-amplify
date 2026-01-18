@@ -98,20 +98,3 @@ resource "aws_amplify_webhook" "main" {
     command = "curl -X POST -d {} '${aws_amplify_webhook.main[0].url}&operation=startbuild' -H 'Content-Type:application/json'"
   }
 }
-
-/*
-aws_s3_object provides an S3 object for customHttp.yml configuration.
-https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object
-*/
-resource "aws_s3_object" "custom_http_config" {
-  count = length(var.custom_headers) > 0 ? 1 : 0
-
-  bucket = aws_amplify_app.this.default_domain
-  key    = "customHttp.yml"
-  content = templatefile("${path.module}/templates/customHttp.tftpl", {
-    custom_headers   = var.custom_headers
-    application_root = var.application_root
-  })
-
-  depends_on = [aws_amplify_branch.this]
-}
