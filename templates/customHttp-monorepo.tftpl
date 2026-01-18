@@ -1,0 +1,11 @@
+applications:
+  - appRoot: "${application_root}"
+    customHeaders:
+%{for header_rule in custom_headers}
+      - pattern: "${header_rule.pattern}"
+        headers:
+%{for header in header_rule.headers}
+          - key: "${header.key}"
+            value: "${header.value}"
+%{endfor}
+%{endfor}
