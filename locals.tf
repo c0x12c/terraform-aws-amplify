@@ -16,14 +16,14 @@ locals {
     var.custom_redirect_rules
   ) : var.custom_redirect_rules
 
-  custom_headers = length(var.custom_headers) > 0 ? local.is_monorepo ? [
-    {
-      appRoot       = var.application_root
-      customHeaders = var.custom_headers
-    }
-    ] : [
-    {
-      customHeaders = var.custom_headers
-    }
-  ] : null
+  custom_headers = length(var.custom_headers) > 0 ? local.is_monorepo ? jsonencode({
+    applications = [
+      {
+        appRoot       = var.application_root
+        customHeaders = var.custom_headers
+      }
+    ]
+    }) : jsonencode({
+    customHeaders = var.custom_headers
+  }) : null
 }
