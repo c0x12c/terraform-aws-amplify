@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1]() (2026-03-31)
+
+### Bug Fixes
+
+* Replace regex-based monorepo detection with explicit string normalization to avoid runtime errors
+* Use normalized `application_root` consistently in custom headers and build spec templates
+
 ## [1.4.0]() (2026-03-01)
 
 ### Features

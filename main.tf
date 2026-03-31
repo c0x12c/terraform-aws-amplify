@@ -9,7 +9,7 @@ resource "aws_amplify_app" "this" {
   access_token = var.github_token
 
   build_spec = templatefile(local.build_spec, {
-    application_root         = var.application_root
+    application_root         = local.normalized_root
     base_artifacts_directory = var.base_artifacts_directory
     build_command            = var.build_command
     install_command          = var.install_command
